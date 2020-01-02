@@ -99,6 +99,31 @@ function fliteKeys(keys){
     return allow;
 }
 
+function parseType(str){
+    if(str === 'true'){
+        return true;
+    } else if(str === 'false'){
+        return false;
+    } else if(!!str.match(/^(-|)[0-9]+$/)){
+        return parseInt(str);
+    } else {
+        return str;
+    }
+}
+
+function ObjectParseType(object){
+    let ret = {};
+    for(let key in object){
+        let one = object[key];
+        if(typeof one === 'string'){
+            ret[key] = parseType(one);
+        } else {
+            ret[key] = one;
+        }
+    }
+    return ret;
+}
+
 function transDb(next){
     Promise.all([
         getDbInterface(nconf.get('database')),
@@ -144,6 +169,7 @@ function transDb(next){
                                         srcDbi.getObject(key, (err, values) => {
                                             if(err) return callback(err);
 
+                                            values = ObjectParseType(values);
                                             dstDbi.setObject(key, values, callback);
                                         });
                                         break;
