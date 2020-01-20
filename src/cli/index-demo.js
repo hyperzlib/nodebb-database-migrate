@@ -1,3 +1,5 @@
+// please add follow in index.js
+// 请在index.js中加上这几行
 program
 	.command('transfer-database', null, {
 		noHelp: true,
